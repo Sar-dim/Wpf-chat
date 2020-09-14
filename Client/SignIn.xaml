@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Авторизация" Height="450" Width="500" ResizeMode="NoResize"
         WindowStyle="None" Background="Transparent" AllowsTransparency="True">
-    <Grid>
+    <Grid KeyUp="Grid_KeyUp">
         <Border Width="auto" Height="auto" BorderBrush="LimeGreen" BorderThickness="2"
                 CornerRadius="0,30,0,30" MouseLeftButtonDown="Border_MouseLeftButtonDown">
             <Border.Background>

@@ -25,10 +25,6 @@ namespace SingIn
         public SignIn()
         {
             InitializeComponent();
-            /*
-            Messanger messanger = new Messanger();
-            messanger.Show();
-            this.Close();*/
         }
 
         private void ButtonAuthorization_Click(object sender, RoutedEventArgs e)
@@ -80,6 +76,17 @@ namespace SingIn
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
+        }
+
+        private void Grid_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (InputLogin.Text != "" && InputPassword.Password != "")
+                {
+                    ButtonAuthorization_Click(sender, e);
+                }
+            }
         }
     }
 }

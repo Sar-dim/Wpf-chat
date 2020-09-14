@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="Chat" Height="617" Width="1077">
-    <Grid>
+        Title="Chat" Height="617" Width="1077" WindowStyle="None" ResizeMode="NoResize">
+    <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown">
         <TabControl TabStripPlacement="Left">
             <TabControl.Resources>
                 <Style TargetType="{x:Type Grid}">
@@ -55,22 +55,24 @@
 
                         </DockPanel>
                         <!--Search-->
-                        <DockPanel Grid.Row="0" Grid.Column="1">
+                        <DockPanel Grid.Row="0" Grid.Column="1"  KeyUp="DockPanel_KeyUp_Searching">
                             <TextBox x:Name="search_textbox" Text="Searching" Background="#eeeeee" GotFocus="search_textbox_GotFocus" LostFocus="search_textbox_LostFocus" FontSize="22" FontFamily="Corbel"></TextBox>
                         </DockPanel>
                         <!--Chat Name-->
                         <DockPanel Grid.Row="0" Grid.Column="2" Margin="10,0,0,0">
                             <TextBlock x:Name="chatName_textbox" Text="My channel/My companion" FontFamily="Corbel" FontSize="22" FontWeight="Bold"></TextBlock>
+                            <Button x:Name="Close_button" Height="25" Width="25" HorizontalAlignment="Right" VerticalAlignment="Top" Background="#FFBF1212" Content="X" Foreground="White" FontWeight="Bold" Click="Close_button_Click" />
                         </DockPanel>
                         <!--Contact List-->
-                        <DockPanel Grid.Row="1" Grid.Column="1" Background="Transparent" KeyUp="DockPanel_KeyUp_Searching">
+                        <DockPanel Grid.Row="1" Grid.Column="1" Background="Transparent">
                             <ListBox x:Name="ContactList_listBox" SelectionMode="Single" SelectionChanged="ContactList_listBox_SelectionChanged" Background="#e7ebf7">
 
                             </ListBox>
                         </DockPanel>
                         <!--My Profile-->
                         <DockPanel Grid.Row="2" Grid.Column="1">
-                            <local:Contact x:Name="MyContact" Width="Auto" Height="Auto" Margin="10,10,10,10" local:UserName="My name" local:UserTitle="My title" />
+                            <local:Contact x:Name="MyContact" Width="Auto" Height="Auto" Margin="10,10,10,10" local:UserName="My name" local:UserTitle="My title" DockPanel.Dock="Top" />
+                            <Label x:Name="Label_ServerConnect" Width="Auto" Height="Auto" Margin="10, 00, 10, 10" DockPanel.Dock="Bottom" FontSize="13" FontFamily="Corbel" Content="Server Connect"/>
                         </DockPanel>
                         <!--Chat Body-->
                         <DockPanel Grid.Row="1" Grid.Column="2" Margin="0, 0, 0, 0" Background="Transparent">
@@ -81,7 +83,7 @@
                             </DockPanel.Resources>
                             <Border BorderThickness="1" BorderBrush="#cccccc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <ScrollViewer x:Name="chatBody_scroll" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
-                                    <Grid>
+                                    <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown">
                                         <ListBox x:Name="chatBody_listBox" HorizontalContentAlignment="Stretch" Template="{StaticResource NoScroll}">
                                         </ListBox>
                                     </Grid>
