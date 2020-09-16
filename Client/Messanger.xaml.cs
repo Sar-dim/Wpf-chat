@@ -25,10 +25,12 @@ namespace Client
     /// </summary>
     public partial class Messanger : Window
     {
-        
-        public Net net;
         public List<Contact> contacts;
-        
+        private const string host = "127.0.0.1";
+        private const int port = 8888;
+        public TcpClient client;
+        public NetworkStream stream;
+        public Thread receiveThread;
         public int ContactListIndex = -1;
         public Messanger()
         { }
@@ -72,7 +74,7 @@ namespace Client
                 }
             }
             dBconnection.ForceClose();
-            //Добавление контактам сообщений
+            //Добавление контактам сообщения
             List<Message> tempMessages = new List<Message>();        
             foreach (var contactString in contactsString)
             {
@@ -83,11 +85,11 @@ namespace Client
                 {
                     if (result.GetString(1) == contactString)
                     {
-                        tempMessages.Add(new Message(result.GetString(3), result.GetString(5), false));
+                        tempMessages.Add(new Message(result.GetString(3), result.GetString(5).Substring(0, 5), false));
                     }
                     else if (result.GetString(2) == contactString)
                     {
-                        tempMessages.Add(new Message(result.GetString(3), result.GetString(5), true));
+                        tempMessages.Add(new Message(result.GetString(3), result.GetString(5).Substring(0, 5), true));
                     }
                 }
                 contacts.Add(new Contact(new List<Message>(tempMessages), contactString, "")); //создание контакта с сообщениями
@@ -96,8 +98,11 @@ namespace Client
             }
             ContactList_listBox.ItemsSource = contacts; //обновление списка контактов на форме
             //Подключение к серверу и передача ему login
-            net = new Net(login);
-            
+            client = new TcpClient();
+            client.Connect(host, port); //подключение клиента
+            stream = client.GetStream(); // получаем поток
+            Net.SendMessage(login, stream);
+            ReceiveMessages(stream, client);
             Label_ServerConnect.Foreground = Brushes.Green;
             Label_ServerConnect.Content = "Сервер подключен";
         }
@@ -215,7 +220,7 @@ namespace Client
         }
         private void Close_button_Click(object sender, RoutedEventArgs e)
         {
-            net.Disconnect();
+            Net.Disconnect(stream, client);
             this.Close();
         }
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -229,7 +234,7 @@ namespace Client
             chatBody_listBox.ItemsSource = null; //обнуляем listbox, иначе не работает следующая строка
             chatBody_listBox.ItemsSource = contacts[ContactListIndex].MessageHistory; //обновление списка сообщений в форме
             chatBody_scroll.ScrollToEnd();
-            net.SendMessage($"NewMessage{MyContact.userName_textBlock.Text}&{contacts[ContactListIndex].userName_textBlock.Text}&{sendMessage_textBox.Text}&{DateTime.Now.ToString("d")}&{DateTime.Now.ToString("t")}");
+            Net.SendMessage($"NewMessage{MyContact.userName_textBlock.Text}&{contacts[ContactListIndex].userName_textBlock.Text}&{sendMessage_textBox.Text}&{DateTime.Now.ToString("d")}&{DateTime.Now.ToString("t")}", stream);
         }
         //Добавление нового полученного сообщения
         public void AddNewReceivedMessage(string textMessage, string sender, string date, string time)
@@ -241,12 +246,15 @@ namespace Client
                 {
                     contact.MessageHistory.Add(new Message(textMessage, time, false));//добавляем ему полученное соощение
                     foundContact = true;
-                    if (contact == contacts[ContactListIndex]) //Если этот контакт выбран сейчас, то отображаем сообщение
+                    if (ContactListIndex != -1)
                     {
-                        chatBody_listBox.ItemsSource = null; //обнуляем listbox, иначе не работает следующая строка
-                        chatBody_listBox.ItemsSource = contacts[ContactListIndex].MessageHistory; //обновление списка сообщений в форме
-                        chatBody_scroll.ScrollToEnd();
-                    }
+                        if (contact == contacts[ContactListIndex]) //Если этот контакт выбран сейчас, то отображаем сообщение
+                        {
+                            chatBody_listBox.ItemsSource = null; //обнуляем listbox, иначе не работает следующая строка
+                            chatBody_listBox.ItemsSource = contacts[ContactListIndex].MessageHistory; //обновление списка сообщений в форме
+                            chatBody_scroll.ScrollToEnd();
+                        }
+                    }      
                 }
             }
             if (!foundContact) //Если отправителя нет в контактах
@@ -255,6 +263,40 @@ namespace Client
                 newMessage.Add(new Message(textMessage, time, false));
                 contacts.Add(new Contact(new List<Message>(newMessage), sender, ""));
             }          
-        }     
+        }
+        // получение сообщений
+        public async void ReceiveMessages(NetworkStream stream, TcpClient client)
+        {
+            string message;
+            int found;
+            string sender;
+            string recepient;
+            string textMessage;
+            string time;
+            string date;
+            do
+            {
+                sender = recepient = textMessage = time = date = message = null;
+                message = await Net.ReceiveNewMessage(stream, client);
+                if (message != null)
+                {
+                    message = message.Substring(10);
+                    found = message.IndexOf("&");
+                    sender = message.Substring(0, found);
+                    message = message.Substring(found + 1);
+                    found = message.IndexOf("&");
+                    recepient = message.Substring(0, found);
+                    message = message.Substring(found + 1);
+                    found = message.IndexOf("&");
+                    textMessage = message.Substring(0, found);
+                    message = message.Substring(found + 1);
+                    found = message.IndexOf("&");
+                    date = message.Substring(0, found);
+                    message = message.Substring(found + 1);
+                    time = message;
+                    AddNewReceivedMessage(textMessage, sender, date, time);
+                }
+            } while (true);
+        }
     }
 }

@@ -1,85 +1,48 @@
 ﻿using SingIn;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Client
 {
-    public class Net : Messanger
+    public static class Net
     {
-        private const string host = "127.0.0.1";
-        private const int port = 8888;
-        public TcpClient client;
-        public NetworkStream stream;
-        public Thread receiveThread;
-        public Net(string login)
-        {
-            client = new TcpClient();
-            client.Connect(host, port); //подключение клиента
-            stream = client.GetStream(); // получаем поток
-            SendMessage(login);
-            receiveThread = new Thread(new ThreadStart(ReceiveMessage));// запускаем новый поток для получения данных
-            receiveThread.Start(); //старт потока
-        }
         // отправка сообщений
-        public void SendMessage(string message)
+        public static void SendMessage(string message, NetworkStream stream)
         {
             byte[] data = Encoding.Unicode.GetBytes(message);
             stream.Write(data, 0, data.Length);
         }
-        // получение сообщений
-        public void ReceiveMessage()
+        
+        // получение нового сообщения
+        public async static Task<string> ReceiveNewMessage(NetworkStream stream, TcpClient client)
         {
-            int found = 0;
-            string textMessage = "";
-            string sender = "";
-            string recepient = "";
-            string date = "";
-            string time = "";
-            while (true)
+            byte[] data = new byte[64]; // буфер для получаемых данных
+            StringBuilder builder = new StringBuilder();
+            int bytes = 0;
+            do
             {
-                try
-                {
-                    byte[] data = new byte[64]; // буфер для получаемых данных
-                    StringBuilder builder = new StringBuilder();
-                    int bytes = 0;
-                    do
-                    {
-                        bytes = stream.Read(data, 0, data.Length);
-                        builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                    }
-                    while (stream.DataAvailable);
+                bytes = (await stream.ReadAsync(data, 0, data.Length));
+                builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+            }
+            while (stream.DataAvailable);
 
-                    string message = builder.ToString();
-                    if (message.Contains("NewMessage"))
-                    {
-                        message = message.Substring(10);
-                        found = message.IndexOf("&");
-                        sender = message.Substring(0, found);
-                        message = message.Substring(found + 1);
-                        found = message.IndexOf("&");
-                        recepient = message.Substring(0, found);
-                        message = message.Substring(found + 1);
-                        found = message.IndexOf("&");
-                        textMessage = message.Substring(0, found);
-                        message = message.Substring(found + 1);
-                        found = message.IndexOf("&");
-                        date = message.Substring(0, found);
-                        message = message.Substring(found + 1);
-                        time = message;
-                    }
-                }
-                catch
-                {
-                    Disconnect();//соединение было прервано
-                }
-                AddNewReceivedMessage(textMessage, sender, date, time);            
+            string message = builder.ToString();
+            if (message.Contains("NewMessage"))
+            {
+                return message;
+            }
+            else
+            {
+                return "Error";
             }
         }
-        public void Disconnect()
+        public static void Disconnect(NetworkStream stream, TcpClient client)
         {
             if (stream != null)
                 stream.Close();//отключение потока

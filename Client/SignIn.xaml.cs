@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DBConnection;
+using System.Net.Sockets;
 
 namespace SingIn
 {
@@ -22,11 +23,14 @@ namespace SingIn
     /// </summary>
     public partial class SignIn : Window
     {
+        private const string host = "127.0.0.1";
+        private const int port = 8888;
+        public TcpClient client;
+        public NetworkStream stream;
         public SignIn()
         {
             InitializeComponent();
         }
-
         private void ButtonAuthorization_Click(object sender, RoutedEventArgs e)
         {
             DBconnection dBconnection = new DBconnection();
