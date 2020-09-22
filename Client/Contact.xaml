@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:Client"
              mc:Ignorable="d" 
              d:DesignHeight="65" d:DesignWidth="258">
+    <UserControl.Resources>
+        
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="65"></ColumnDefinition>

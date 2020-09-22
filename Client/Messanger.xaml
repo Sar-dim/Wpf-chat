@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
         Title="Chat" Height="617" Width="1077" WindowStyle="None" ResizeMode="NoResize">
+    
     <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown">
         <TabControl TabStripPlacement="Left">
             <TabControl.Resources>
@@ -66,7 +67,11 @@
                         <!--Contact List-->
                         <DockPanel Grid.Row="1" Grid.Column="1" Background="Transparent">
                             <ListBox x:Name="ContactList_listBox" SelectionMode="Single" SelectionChanged="ContactList_listBox_SelectionChanged" Background="#e7ebf7">
-
+                                <ListBox.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                                </ListBox.Resources>
                             </ListBox>
                         </DockPanel>
                         <!--My Profile-->
