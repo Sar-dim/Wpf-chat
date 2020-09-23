@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="Client.Contact"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client"
+             mc:Ignorable="d" 
+             d:DesignHeight="65" d:DesignWidth="258">
+    <UserControl.Resources>
+        
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="65"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Image x:Name="userPic" Width="60" Height="60"/>
+        <StackPanel Grid.Column="1">
+            <TextBlock x:Name="userName_textBlock" Text="User Name" FontSize="16" FontFamily="Corbel" Margin="5"></TextBlock>
+            <TextBlock x:Name="userTitle_textBlock" Text="Subtitle  " FontSize="13" FontFamily="Corbel" Margin="5,0,0,0"></TextBlock>
+        </StackPanel>
+    </Grid>
+</UserControl>

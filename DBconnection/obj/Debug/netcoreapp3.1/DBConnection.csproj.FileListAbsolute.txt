@@ -1,0 +1,11 @@
+C:\Users\Дмитрий\source\repos\Wpf-chat\DBconnection\bin\Debug\netcoreapp3.1\DBConnection.deps.json
+C:\Users\Дмитрий\source\repos\Wpf-chat\DBconnection\bin\Debug\netcoreapp3.1\DBConnection.dll
+C:\Users\Дмитрий\source\repos\Wpf-chat\DBconnection\bin\Debug\netcoreapp3.1\DBConnection.pdb
+C:\Users\Дмитрий\source\repos\Wpf-chat\DBconnection\bin\Debug\netcoreapp3.1\MySql.Data.dll
+C:\Users\Дмитрий\source\repos\Wpf-chat\DBconnection\obj\Debug\netcoreapp3.1\DBConnection.csprojAssemblyReference.cache
+C:\Users\Дмитрий\source\repos\Wpf-chat\DBconnection\obj\Debug\netcoreapp3.1\DBConnection.AssemblyInfoInputs.cache
+C:\Users\Дмитрий\source\repos\Wpf-chat\DBconnection\obj\Debug\netcoreapp3.1\DBConnection.AssemblyInfo.cs
+C:\Users\Дмитрий\source\repos\Wpf-chat\DBconnection\obj\Debug\netcoreapp3.1\DBConnection.csproj.CoreCompileInputs.cache
+C:\Users\Дмитрий\source\repos\Wpf-chat\DBconnection\obj\Debug\netcoreapp3.1\DBConnection.csproj.CopyComplete
+C:\Users\Дмитрий\source\repos\Wpf-chat\DBconnection\obj\Debug\netcoreapp3.1\DBConnection.dll
+C:\Users\Дмитрий\source\repos\Wpf-chat\DBconnection\obj\Debug\netcoreapp3.1\DBConnection.pdb

@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="chat.png" />
+    <None Remove="file.png" />
+    <None Remove="group.png" />
+    <None Remove="settings.png" />
+    <None Remove="smile.png" />
+    <None Remove="support.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.21" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DBconnection\DBConnection.csproj" />
+    <ProjectReference Include="..\PasswordChecking\PasswordChecking.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="chat.png" />
+    <Resource Include="file.png" />
+    <Resource Include="group.png" />
+    <Resource Include="settings.png" />
+    <Resource Include="smile.png" />
+    <Resource Include="support.png" />
+  </ItemGroup>
+
+</Project>

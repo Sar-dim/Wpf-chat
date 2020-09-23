@@ -1,0 +1,175 @@
+﻿<Window x:Class="Client.Messanger"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        mc:Ignorable="d"
+        Title="Chat" Height="617" Width="1077" WindowStyle="None" ResizeMode="NoResize">
+    
+    <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+        <TabControl TabStripPlacement="Left">
+            <TabControl.Resources>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="Background"  Value="#e7ebf7"/>
+                </Style>
+            </TabControl.Resources>
+            <TabItem x:Name="chat">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/chat.png" Height="46" Width="45"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Grid x:Name="mainGrid"
+                          ShowGridLines="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="34"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="120"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2"></ColumnDefinition>
+                            <ColumnDefinition Width="300"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+
+                        </Grid.ColumnDefinitions>
+
+                        <Rectangle Grid.Row="0"
+                                   Grid.Column="0"
+                                   Grid.RowSpan="3"
+                                    >
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="White" Offset="1.2"></GradientStop>
+                                    <GradientStop Color="#FF4444CD" Offset="0.1"></GradientStop>
+                                    <GradientStop Color="Aqua" Offset="0.5"></GradientStop>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle Grid.Row="1"
+                                   Grid.Column="1" Fill="#FFE7EBF7">
+                           
+                        </Rectangle>
+                        <!--Side Panel-->
+                        <DockPanel Grid.Row="0" Grid.Column="0" Grid.RowSpan="3">
+
+                        </DockPanel>
+                        <!--Search-->
+                        <DockPanel Grid.Row="0" Grid.Column="1"  KeyUp="DockPanel_KeyUp_Searching">
+                            <TextBox x:Name="search_textbox" Text="Searching" Background="#eeeeee" GotFocus="search_textbox_GotFocus" LostFocus="search_textbox_LostFocus" FontSize="22" FontFamily="Corbel"></TextBox>
+                        </DockPanel>
+                        <!--Chat Name-->
+                        <DockPanel Grid.Row="0" Grid.Column="2" Margin="10,0,0,0">
+                            <TextBlock x:Name="chatName_textbox" Text="My channel/My companion" FontFamily="Corbel" FontSize="22" FontWeight="Bold"></TextBlock>
+                            <Button x:Name="Close_button" Height="25" Width="25" HorizontalAlignment="Right" VerticalAlignment="Top" Background="#FFBF1212" Content="X" Foreground="White" FontWeight="Bold" Click="Close_button_Click" />
+                        </DockPanel>
+                        <!--Contact List-->
+                        <DockPanel Grid.Row="1" Grid.Column="1" Background="Transparent">
+                            <ListBox x:Name="ContactList_listBox" SelectionMode="Single" SelectionChanged="ContactList_listBox_SelectionChanged" Background="#e7ebf7">
+                                <ListBox.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                                </ListBox.Resources>
+                            </ListBox>
+                        </DockPanel>
+                        <!--My Profile-->
+                        <DockPanel Grid.Row="2" Grid.Column="1">
+                            <local:Contact x:Name="MyContact" Width="Auto" Height="Auto" Margin="10,10,10,10" local:UserName="My name" local:UserTitle="My title" DockPanel.Dock="Top" />
+                            <Label x:Name="Label_ServerConnect" Width="Auto" Height="Auto" Margin="10, 00, 10, 10" DockPanel.Dock="Bottom" FontSize="13" FontFamily="Corbel" Content="Server Connect"/>
+                        </DockPanel>
+                        <!--Chat Body-->
+                        <DockPanel Grid.Row="1" Grid.Column="2" Margin="0, 0, 0, 0" Background="Transparent">
+                            <DockPanel.Resources>
+                                <ControlTemplate x:Key="NoScroll">
+                                    <ItemsPresenter></ItemsPresenter>
+                                </ControlTemplate>
+                            </DockPanel.Resources>
+                            <Border BorderThickness="1" BorderBrush="#cccccc" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <ScrollViewer x:Name="chatBody_scroll" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                                    <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+                                        <ListBox x:Name="chatBody_listBox" HorizontalContentAlignment="Stretch" Template="{StaticResource NoScroll}">
+                                        </ListBox>
+                                    </Grid>
+                                </ScrollViewer>
+                            </Border>
+                        </DockPanel>
+                        <Border BorderThickness="1" 
+                                BorderBrush="#cccccc"
+                                Grid.Column="2"
+                                Grid.Row="2"
+                                HorizontalAlignment="Stretch" 
+                                VerticalAlignment="Stretch"/>
+                        <!--Input Message-->
+                        <DockPanel Grid.Row="2" Grid.Column="2" KeyUp="DockPanel_KeyUp">
+                            <TextBox x:Name="sendMessage_textBox" GotFocus="sendMessage_textBox_GotFocus" LostFocus="sendMessage_textBox_LostFocus" DockPanel.Dock="Top" Margin="1, 42, 1, 1" FontSize="13" FontFamily="Corbel" Text="Input message" TextAlignment="Left"/>
+                        </DockPanel>
+                        <DockPanel Grid.Row="2" Grid.Column="2" >
+                            <Button x:Name="sendFile_button1" 
+                                    Click="sendFile_button1_Click" 
+                                    Background="#eeeeee"
+                                    Margin="1,1,0,0"
+                                    DockPanel.Dock="Left" 
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Height="40" Width="40">
+                                <Image Source="/file.png"/>
+                            </Button>
+                            <Button x:Name="sendSmile_button2"
+                                    Click="sendSmile_button2_Click" 
+                                    Background="#eeeeee" 
+                                    Margin="0,1,0,0"
+                                    DockPanel.Dock="Left" 
+                                    HorizontalAlignment="Left" 
+                                    VerticalAlignment="Top" 
+                                    Height="40"
+                                    Width="40">
+                                <Image Source="/smile.png">
+                                </Image>
+                            </Button>
+                            <Button x:Name="sendMessage_button3" Click="sendMessage_button3_Click" Background="#eeeeee" Margin="0,1,0,0" DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Top" Height="40" Width="40"></Button>
+                            <Button x:Name="sendMessage_button4" Click="sendMessage_button4_Click" Background="#eeeeee" Margin="0,1,0,0" DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Top" Height="40" Width="40"></Button>
+                            <Button x:Name="sendMessage_button" Click="sendMessage_button_Click" Content="Send" DockPanel.Dock="Bottom" Margin="1,1,1,1" Height="40" Width="40" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                        </DockPanel>
+
+                        <Border BorderThickness="1" BorderBrush="#cccccc" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem x:Name="groups">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="46" Width="45" Source="/group.png"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Grid>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem x:Name="settings">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="46" Width="45" Source="/settings.png"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Grid>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+            <TabItem x:Name="support">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="46" Width="45" Source="/support.png"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Grid>
+                    </Grid>
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
